@@ -1,0 +1,255 @@
+Entity
+======
+Collection of Various Components built from different pieces each with their own dataset. 
+
+Component
+=========
+Collection of Data and only data which stores state information 
+System
+======
+
+
+
+
+
+Entity
+======
+Transform-Component
+Camera-Component
+AI-Component
+
+
+
+
+
+Does each component have its own System that controls that components data....
+... or should I have a single System which controls all the components;
+
+
+I think the correct way to do it is to have the entity control its data so the Entity is the system which controls the data of its Components
+
+
+
+
+Object
+
+
+GameObject:Object
+- Vector<Component>
+
+Component: Object
+'
+
+
+
+
+Example:
+
+Player has 
+    Health component
+    Position x,y  component
+    Strength  component
+    Level  component
+    Physics  component
+    Collision Box  child component of Physics
+    Texture component
+
+
+Entity - Player
+   so we say, player has a health component; This controls his life meter, max health, death, 
+
+
+
+class Health: public Component
+{
+
+static std::vector<Health> List; Everytime we instantiate a Health object we push it onto the back of this List
+}
+
+
+
+
+
+template <typename T>
+class System
+{
+System(){} Private default constructor
+
+public:
+
+    static System &Get()
+    {
+        static System instance;
+        return instance;
+    }
+}
+
+class HealthSystem 
+{
+
+    
+}
+
+	 static ModelLoader& getInstance()
+	 {// Local Static Initialization allowing for singleton creation and instance returned subsequent times.
+		 static ModelLoader instance;  
+		 return instance;
+	 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+//===========================================================================================================================================================================================
+//===========================================================================================================================================================================================
+//===========================================================================================================================================================================================
+
+	
+// These two might be similar. MonoBehaviour appears to be the baseclass all scripts derive from
+// UNITY: SendMessage-- - Calls the method named methodName on every MonoBehaviour in this game object.
+
+// FROM UNITY HELP FILE:
+//Description: MonoBehavior
+//MonoBehaviour is the base class from which every Unity script derives.
+//When you use C#, you must explicitly derive from MonoBehaviour.
+//This class doesn't support the null-conditional operator (?.) and the null-coalescing operator (??).
+// METHODS: NOTE: This appears to be a message handler class. Designed to abstract out the various thread possibilities such as rendering, physics updates etc.
+// Start() // Start is called on the frame when a script is enabled just before any of the Update methods are called the first time.
+             Like the Awake function, Start is called exactly once in the lifetime of the script. 
+			 However, Awake is called when the script object is initialised, regardless of whether or not the script is enabled. 
+			 Start may not be called on the same frame as Awake if the script is not enabled at initialisation time.
+// Update() //Update is called every frame, if the MonoBehaviour is enabled.
+              Update is the most commonly used function to implement any kind of game script.
+			  Not every MonoBehaviour script needs Update.
+
+// FixedUpdate()  // Frame-rate independent MonoBehaviour.FixedUpdate message for physics calculations.
+// LateUpdate() //LateUpdate is called every frame, if the Behaviour is enabled.
+           LateUpdate is called after all Update functions have been called.
+		    This is useful to order script execution.
+			 For example a follow camera should always be implemented in LateUpdate because it tracks objects that might have moved inside Update.
+// OnGUI() OnGUI is called for rendering and handling GUI events.
+           This means that your OnGUI implementation might be called several times per frame (one call per event). 
+		   If the MonoBehaviour's enabled property is set to false, OnGUI() will not be called.
+// OnDisable()
+// OnEnable()  //This function is called when the object becomes enabled and active.
+// 
+
+
+
+FixedUpdate()
+=============
+    MonoBehaviour.FixedUpdate has the frequency of the physics system; it is called every fixed frame-rate frame. 
+    Compute Physics system calculations after FixedUpdate. 0.02 seconds (50 calls per second) is the default time between calls. // TODO: Make a Default Timer system for the Behavior/Physics engine to run off of
+    Use Time.fixedDeltaTime to access this value. 
+    Alter it by setting it to your preferred value within a script, or, navigate to Edit > Settings > Time > Fixed Timestep and set it there. 
+    The FixedUpdate frequency is more or less than Update. 
+    If the application runs at 25 frames per second (fps), Unity calls it approximately twice per frame, Alternatively, 100 fps causes approximately two rendering frames with one FixedUpdate. 
+    Control the required frame rate and Fixed Timestep rate from Time settings. Use Application.targetFrameRate to set the frame rate.
+    Use FixedUpdate when using Rigidbody. 
+    Set a force to a Rigidbody and it applies each fixed frame.  // TODO: Adding a physics component activates FixedUpdate() function to be called every frame
+    FixedUpdate occurs at a measured time step that typically does not coincide with MonoBehaviour.Update.
+
+
+// GUI Example for unity
+public class ExampleClass : MonoBehaviour
+{
+    void OnGUI()
+    {
+        if (GUI.Button(new Rect(10, 10, 150, 100), "I am a button")) // GUI.Button ~ public static bool Button(Rect position, GUIContent content, GUIStyle style);
+        {
+            print("You clicked the button!");
+        }
+    }
+}
+
+
+
+GUI.Button
+==========
+{
+    --- position - Rectangle on the screen to use for the button.
+    --- text	 - Text to display on the button.
+    --- image	 - Texture to display on the button.
+    --- content	 - Text, image and tooltip for this button.
+    --- style	 - The style to use. If left out, the button style from the current GUISkin is used.
+}RETURNS True if the button has been clicked
+
+
+
+
+
+
+.
+
+
+
+Coroutines are a bit confusing, it seems they get called but as soon as the frame is called the function is paused until it is activated again
+Routines must be stored in a container somewhere as IEnumerator is essentially an Iterator that counts through an Array of various functions
+// Yeild returns control back to unity but the state of the function is preserved
+
+This can be used as a way to spread an effect over a period of time, but it is also a useful optimization.
+ Many tasks in a game need to be carried out periodically and the most obvious way to do this is to include them in the Update function.
+  However, this function will typically be called many times per second.
+   When a task doesn’t need to be repeated quite so frequently, you can put it in a coroutine to get an update regularly but not every single frame.
+    An example of this might be an alarm that warns the player if an enemy is nearby.
+
+If there are a lot of enemies then calling this function every frame might introduce a significant overhead. However, you could use a coroutine to call it every tenth of a second:
+
+
+
+
+
+
+
+
+
+
+Ok, behaviour is the event handler
+Monobehavior is the implementation of the event handler for a specific object similar to how my SDL engine is designed. 
+They will be virtual functions with a default, generally empty action unless derived from by the child class
+We will make Behaviour static
+it will contain a list, map or vector of all the monobehavior objects
+
+
+
+
+
+Behaviour:
+==========
+----MonoBehaviour:
+    ==============
+    ----
+
+
+
+
+
+Each game entity (game object) is composed of Components <attributes>
+ (= data, which can be accessed by behaviours, but also by 'external code')
+ and Listeners<behaviours> (= logic, which contain OnUpdate() and OnMessage()). 
+So, for example, in a Breakout clone, each brick would be composed of (example!): Transform <PositionAttribute>,
+ColorAttribute, HealthAttribute, RenderableBehaviour, HitBehaviour. The last one could look like this (it's just a non-working example written in C#):
+
+
+Attribute is Equal to Components
+
+
+Each Object takes in a Message and feeds it to all of its Children Attributes.

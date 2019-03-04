@@ -1,0 +1,1188 @@
+
+//=========================================== DEBUG SWITCHES ==========================================================
+#define _TEXTURE_DEBUG    0
+#define      _UV_DEBUG    0
+//====================================================================================================================
+//================================================================================================================================================================================================ 
+//   GLBuffer needs completion, This will become a Generic buffer class. Possibly typedef out the various buffer types to behave exactly how is currently setup for the multiple buffer types.	   
+//================================================================================================================================================================================================ 
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/26/18
+// Making changes to the Component system, GameObjects which were of type Object will now be component. Components make up the GameObject.
+//====================================================================================================================================================================================================================================================================
+
+// template<typename T>
+// T* GetComponent()
+// {
+// 	return T::Get(int id);
+// }
+// 
+// static T* Get(int index)
+// {
+// 	return ComponentMap[index]
+// }
+// static T* Get(std::string name)
+// {
+// 
+// }
+// 
+// std::string Name;
+// static std::vector<T> ComponentMap;
+// static std::unordered_map<std::string, 
+
+
+
+
+// constant initialization of entity type identifier
+//template
+//const EntityTypeId Entity::STATIC_ENTITY_TYPE_ID = util::Internal::FamilyTypeID::Get();
+
+
+
+class Light : public Component<Object>
+{
+};
+
+
+#pragma once
+//#define USING_ASSETS   
+#ifdef USING_ASSETS
+
+#include"Common.h"
+#include<unordered_map>
+
+
+template<typename T>
+struct Component
+{
+
+	T *GetComponent(std::string name)
+	{
+		for_loop(Index, Count)
+		{
+			if (List[Index]->Name == name)
+			{
+				return List[Index];
+			}
+		}
+		Print("Asset " << name << " Not Registered: Please check the description of ( " << name << " ) ");
+		system("Pause");
+		exit(_ERROR_);
+	}
+	T *GetAsset(int id)
+	{
+		return List[id];
+	}
+
+	std::unordered_map<std::string, *T> ObjectMap;
+
+
+	int Add(std::string name, T *object)
+	{
+		ID = Count++;
+		//List.push_back(object);
+		ObjectMap[name] = object;
+		return ID;
+	}
+
+
+	void Remove(int id)
+	{
+		List.erase(List.begin() + (id));
+		for (int Itr = id; Itr < List.size(); Itr++)
+		{
+			List[Itr]->ID--;
+		}
+	}
+
+	void Delete(std::string name)
+	{
+		Delete(GetAsset(name)->ID);
+	}
+	void Delete(int id)
+	{
+		delete(List[id]);
+		Remove(id);
+	}
+
+	void FreeAll()
+	{
+		for_loop(Index, List.size())
+		{
+			delete(List[Index]);
+		}
+	}
+	bool IsExistant(char *name)
+	{
+		for (auto &L : List)
+		{
+			if (L.Name == name) return true;
+		}
+		return false;
+	}
+
+private:
+	std::vector<T*> List;
+	int ID;
+	int Count;
+};
+
+
+
+
+
+
+
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/26/18
+// Created an _OPEN_FILE macro, soon to be replaced by either template or function call. More likely even an entire file manager class to make File IO much simpler
+// Macro simply opens the file for read and if its NULL breaks the program after reporting filename and later exits.
+//====================================================================================================================================================================================================================================================================
+
+	if (file == nullptr)
+	{
+		printf("Impossible to open the file !\n");
+		exit(0x20);
+	}
+
+NOPE NM, Fuck this Macro...
+
+#define _OPEN_FILE(_file, _handle) FILE *_handle = fopen(_file.c_str(), "r");\
+                            if (!_handle)\
+                            {\
+                            	std::printf("Impossible to open file: " << _file.c_str());\
+                            	_debugbreak();\
+                            	exit(0x13);\
+                            }
+
+	FILE *file = fopen(path.c_str(), "r");
+
+
+
+	}
+
+
+ 
+//
+//// If we couldn't open the output file stream for reading
+//if (!inf)
+//{
+//	// Print an error and exit
+//	cerr << "Uh oh, Sample.dat could not be opened for reading!" << endl;
+//	exit(1);
+//}
+//
+//{
+//	// read stuff from the file into a string and print it
+//	std::string strInput;
+//	inf >> strInput;
+//	cout << strInput << endl;
+//}
+ // While there's still stuff left to read
+//while (inf)
+
+
+REASON: Old Clutter in Common.h
+
+
+///  #include"BitOps.h"
+///  
+///  int_fast64_t ConCatHighLow(int_fast32_t high, int_fast32_t low)
+///  {
+///  	int_fast64_t RETURN = high;
+///  	RETURN <<= 31;
+///  	return RETURN | low;
+///  }
+///  
+///  int_fast32_t i64_TopBits(int_fast64_t &In)
+///  {
+///  	return In >> 32;
+///  }
+///  
+///  
+///  
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/25/18
+// Attempting to Implement a Universal Model Loader and am making a design decision to eliminate the code below hopefully
+// REMOVED Because switch has been made to load via Singleton Design Pattern
+//====================================================================================================================================================================================================================================================================
+
+//  
+// class ModelLoader
+// {
+// public:
+// 	ModelLoader(std::string path);
+// 	virtual ~ModelLoader();
+// 
+// 	// Virtual Model Loader
+// 	// By default detect the file type and call the appropriate loader if the derived class has not explictly been called
+//     void LoadModel(Mesh *_ret_object, std::string path);
+// 
+// 	ModelType Get_Format() { return Format; } 
+// 	void Set_Format(ModelType form) { Format = form; }
+// 
+// 	Mesh *LoadedMesh;
+// protected:
+// private:
+// 	ModelType Format = ModelType::OBJ;
+// };
+
+
+void ModelLoader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+OBJ_Loader::OBJ_Loader()
+{
+}
+
+void OBJ_Loader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+STL_Loader::STL_Loader()
+{
+}
+
+void STL_Loader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+FBX_Loader::FBX_Loader()
+{
+}
+
+void FBX_Loader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+COLLADA_Loader::COLLADA_Loader()
+{
+}
+
+void COLLADA_Loader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+ThreeDS_Loader::ThreeDS_Loader()
+{
+}
+
+void ThreeDS_Loader::LoadModel(Mesh * _ret_object, std::string path)
+{
+}
+
+//  
+//  class OBJ_Loader :public ModelLoader
+//  {
+//  public:
+//  	OBJ_Loader(std::string path);
+//  	virtual void LoadModel(Mesh *_ret_object, std::string path) override;
+//  	ModelType Format = ModelType::OBJ;
+//  };
+//  class STL_Loader :public ModelLoader
+//  {
+//  public:
+//  	STL_Loader(std::string path);
+//  	virtual void LoadModel(Mesh *_ret_object, std::string path) override;
+//  	ModelType Format = ModelType::STL;
+//  };
+//  class FBX_Loader :public ModelLoader
+//  {
+//  public:
+//  	FBX_Loader();
+//  	virtual void LoadModel(Mesh *_ret_object, std::string path) override;
+//  	ModelType Format = ModelType::FBX;
+//  };
+//  class COLLADA_Loader :public ModelLoader
+//  {
+//  public:
+//  	COLLADA_Loader(std::string path);
+//  	virtual void LoadModel(Mesh *_ret_object, std::string path) override;
+//  	ModelType Format = ModelType::COLLADA;
+//  };
+//  class ThreeDS_Loader :public ModelLoader
+//  {
+//  public:
+//  	ThreeDS_Loader(std::string path);
+//  	virtual void LoadModel(Mesh *_ret_object, std::string path) override;
+//  	ModelType Format = ModelType::_3DS;
+//  };
+//  
+//   
+//====================================================================================================================================================================================================================================================================
+//                                                        1/25/18
+// MORE CLEANUP, ASSIGNMENT CONSTRUCTOR GOTTEN WORKING in MsgUnion for the Event class
+//====================================================================================================================================================================================================================================================================
+
+
+//  
+//  class KeyboardHandler : public Listener
+//  {
+//  	void Handler(Event msg)
+//  	{
+//  		Print("Keyboard Message Handler:" << msg.MSG_Handle());
+//  		switch (msg.MSG_Handle())
+//  		{
+//  
+//  		}
+//  	}
+//  };
+//  class MouseHandler : public Listener
+//  {
+//  	void Handler(Event msg)
+//  	{
+//  		Print("Mouse Event Message Handler " << msg.MSG_Handle());
+//  	}
+//  };
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/23/18
+//  CODE CLEANUP AND CODE REFACTORING TO REMOVE UNUSED CODE
+//====================================================================================================================================================================================================================================================================
+
+
+
+// 
+// Mouse.Action = 0;
+// 
+// Keyboard.Key = 0;
+// Keyboard.Scancode = 0;
+// Keyboard.Action = 0;
+// Keyboard.Modifications = 0;
+// 
+//float GetTicks()
+//{
+//	return glfwGetTime() * 1000;
+//}
+//======================================================================================================================================================================
+//______________________________________________________  EVENT HANDLER AND MESSAGE DISPATCHER  ________________________________________________________________________
+//bool Window::EventLoop()
+//{
+//	glfwPollEvents();
+//	if (glfwWindowShouldClose(SCREEN->glCONTEXT))
+//	{
+//		return false;
+//	}
+//	else
+//	{
+//		return true;
+//	}
+//}
+//
+////======================================================================================================================================================================
+////__________________________________________________________ CLIPBOARD GETTERS AND SETTERS _____________________________________________________________________________
+//const char *Window::GetClipBoard()  /*clipboard Getter*/
+//{
+//	Print("TEST GET CLIPBOARD FUNCTION");
+//	const char* text = glfwGetClipboardString(Window::SCREEN->glCONTEXT);
+//	if (text)
+//	{
+//		return text;
+//	}
+//	else
+//	{
+//		return NULL;
+//	}
+//}
+//void  Window::SetClipBoard(char *text)  /*clipboard setter*/
+//{
+//	Print("TEST SET CLIPBOARD FUNCTION");
+//	glfwSetClipboardString(Window::SCREEN->glCONTEXT, text);
+//}
+//
+
+//=================================================================================================================================================================== */
+//_____________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                         /* GLFW CALLBACKS SET WINDOW CLASS STATE FOR ACTIVE WINDOW */                                                              //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//======================================================================================================================================================================
+//__________________________________________________________ Swap front and back buffers _______________________________________________________________________________
+// void Window::Sync()
+// {
+// 	switch ( Keyboard.Action)
+// 	{
+// 	case(GLFW_PRESS):
+// 
+// 		if (SCREEN->Callbacks.CallBackOnKeyDown != nullptr)
+// 		{
+// 			SCREEN->Callbacks.CallBackOnKeyDown(SCREEN->Keyboard.Key,
+// 				SCREEN->Keyboard.Scancode,
+// 				SCREEN->Keyboard.Modifications, NULL); // Check this Null its suppose to be a Repeat checker
+// 
+// 		}
+// 		break;
+// 
+// 	case(GLFW_REPEAT):
+// 		if (SCREEN->Callbacks.CallBackOnKeyDown != nullptr)
+// 		{
+// 			SCREEN->Callbacks.CallBackOnKeyDown(SCREEN->Keyboard.Key, SCREEN->Keyboard.Scancode, SCREEN->Keyboard.Modifications, true); // Check this Null its suppose to be a Repeat checker
+// 		}
+// 		//     if(SCREEN->Callbacks.CallBackOnKeyHold != nullptr)   TODO: THIS IS PISSING ME OFF, I DISLIKE GLFW FOR TAKING CONTROL OF MY MESSAGE LOOP
+// 		//     {
+// 		//         SCREEN->Callbacks.CallBackOnKeyHold(SCREEN->Keyboard.Key, SCREEN->Keyboard.Scancode, SCREEN->Keyboard.Modifications); // Check this Null its suppose to be a Repeat checker
+// 		//     }
+// 		break;
+// 
+// 	case(GLFW_RELEASE):
+// 		SCREEN->Keyboard.Key = 0;
+// 		if (SCREEN->Callbacks.CallBackOnKeyUp != nullptr)
+// 		{
+// 			SCREEN->Callbacks.CallBackOnKeyUp(SCREEN->Keyboard.Key, SCREEN->Keyboard.Scancode, SCREEN->Keyboard.Modifications);
+// 		}
+// 		break;
+// 	}
+// 
+// 	/*~~~~~~~~~~~~~~~~~~Get Frames Per Second~~~~~~~~~~~~~~~~~~~~*/
+// 
+// 	Framerate.CurrentTime = GetTicks();
+// 	float DeltaTime = Framerate.CurrentTime - Framerate.PreviousTime;
+// 	Framerate.PreviousTime = Framerate.CurrentTime;
+// 
+// 	if (Framerate.CurrentTime - Framerate.Tracker >= 1000)
+// 	{
+// 		Framerate.Rate = Framerate.Counter;
+// 		Framerate.Tracker = Framerate.CurrentTime;
+// 		Framerate.Counter = 0;
+// 	}
+// 	if ((Framerate.CurrentTime - Framerate.LastFrame) >= Framerate.Coefficient)
+// 	{
+// 		Framerate.LastFrame = Framerate.CurrentTime;
+// 		Framerate.Counter++;
+// 
+// 		Update();
+// 		Render();
+// 		glfwSwapBuffers(SCREEN->glCONTEXT);
+// 	}
+// 	else
+// 	{
+// 		// Required Time for Framerate not meet yet do some other Update.
+// 	}
+// 
+// 
+// }
+// 
+//======================================================================================================================================================================
+//____________________________________________________________  Clear the back buffers  ________________________________________________________________________________
+
+//______________________________________________________________________________________________________________________________________________________________________
+//*Best view in collapsed mode*           CALLBACK FUNCTIONS
+//______________________________________________________________________________________________________________________________________________________________________
+//void Window::Error_callback(int error, const char* description)
+//{
+//#if _CALLBACK_DEBUG
+//	Print("Error Callback");
+//#endif
+//	Print("WINDOW ERROR CALLBACK: " << glewGetErrorString(error)); // << std::end;
+//	Print(stderr << " Error: %s\n " << description);
+//}
+//void Window::Resize_Callback(GLFWwindow *HAND, int w, int h)
+//{
+//#if _CALLBACK_DEBUG
+//	Print("Resize callback W: " << w << " H: " << h);
+//#endif
+//	SCREEN->Size = Vec2(w, h);
+//	SCREEN->Mouse.Offset = SCREEN->Size / Vec2(SCREENWIDTH, SCREENHEIGHT);
+//	glViewport(0, 0, w, h);
+//}
+//
+//void Window::Window_close_callback(GLFWwindow* window)
+//{
+//	if (glfwWindowShouldClose(SCREEN->glCONTEXT))
+//	{
+//		glfwSetWindowShouldClose(window, GL_TRUE);
+//	}
+//}
+//void Window::KeyBoard_Callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+//{
+//#if _CALLBACK_DEBUG
+//	Print("Keyboard Callback");
+//#endif
+//	SCREEN->Keyboard.Key = key;
+//	SCREEN->Keyboard.Action = action;
+//	SCREEN->Keyboard.Scancode = scancode;
+//	SCREEN->Keyboard.Modifications = mods;
+//	SCREEN->Keyboard.KEY_STATES[key] = glfwGetKey(SCREEN->glCONTEXT, key);
+//}
+//void Window::Mouse_Callback(GLFWwindow *window, int button, int action, int mod)
+//{
+//#if _CALLBACK_DEBUG
+//	Print("Mouse Callback");
+//#endif
+//	SCREEN->Mouse.Action = action;
+//	switch (action)
+//	{
+//	case GLFW_PRESS:
+//		switch (button)
+//		{
+//		case MOUSE_LEFT:
+//			SCREEN->Mouse.Button.Left = true;
+//			if (SCREEN->Callbacks.CallBackOnLButtonDown != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnLButtonDown(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case MOUSE_RIGHT:
+//			SCREEN->Mouse.Button.Right = true;
+//			if (SCREEN->Callbacks.CallBackOnRButtonDown != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnRButtonDown(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case MOUSE_CENTER:
+//			SCREEN->Mouse.Button.Center = true;
+//			if (SCREEN->Callbacks.CallBackOnMButtonDown != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnMButtonDown(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case GLFW_MOUSE_BUTTON_4:
+//			Print("Add Mouse Support for Button 4");
+//			break;
+//		case GLFW_MOUSE_BUTTON_5:
+//			Print("Add Mouse Support for Button 5");
+//			break;
+//		case GLFW_MOUSE_BUTTON_6:
+//			Print("Add Mouse Support for Button 6");
+//			break;
+//		case GLFW_MOUSE_BUTTON_7:
+//			Print("Add Mouse Support for Button 7");
+//			break;
+//		case GLFW_MOUSE_BUTTON_8:
+//			Print("Add Mouse Support for Button 8");
+//			break;
+//		}
+//		break;
+//	case GLFW_RELEASE:
+//		switch (button)
+//		{
+//		case MOUSE_LEFT:
+//			SCREEN->Mouse.Button.Left = false;
+//			if (SCREEN->Callbacks.CallBackOnLButtonUp != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnLButtonUp(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case MOUSE_RIGHT:
+//			SCREEN->Mouse.Button.Right = false;
+//			if (SCREEN->Callbacks.CallBackOnRButtonUp != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnRButtonUp(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case MOUSE_CENTER:
+//			SCREEN->Mouse.Button.Center = false;
+//			if (SCREEN->Callbacks.CallBackOnMButtonUp != NULL)
+//			{
+//				SCREEN->Callbacks.CallBackOnMButtonUp(SCREEN->Mouse.Position.x, SCREEN->Mouse.Position.y);
+//			}
+//			break;
+//		case GLFW_MOUSE_BUTTON_4:
+//			Print("Add Mouse Support for Button 4");
+//			break;
+//		case GLFW_MOUSE_BUTTON_5:
+//			Print("Add Mouse Support for Button 5");
+//			break;
+//		case GLFW_MOUSE_BUTTON_6:
+//			Print("Add Mouse Support for Button 6");
+//			break;
+//		case GLFW_MOUSE_BUTTON_7:
+//			Print("Add Mouse Support for Button 7");
+//			break;
+//		case GLFW_MOUSE_BUTTON_8:
+//			Print("Add Mouse Support for Button 8");
+//			break;
+//		}
+//	}
+//}
+//void Window::DropFile_callback(GLFWwindow *window, int count, const char** paths)
+//{
+//	for (int i = 0; i < count; i++)
+//	{
+//		Print("File the DropFILE callback to handle File:");  //handle_dropped_file(paths[i]);
+//		Print(*paths);
+//	}
+//}
+//void Window::MouseMove_Callback(GLFWwindow *window, double xpos, double ypos)
+//{
+//	SCREEN->Mouse.Velocity = SCREEN->Mouse.Position - Vec2(xpos, ypos);
+//	SCREEN->Mouse.RealPosition = Vec2(xpos, ypos);
+//	SCREEN->Mouse.Position = SCREEN->Mouse.RealPosition / (SCREEN->Mouse.Offset);
+//
+//	if (SCREEN->Callbacks.CallBackOnMouseMove != NULL)
+//	{
+//		SCREEN->Callbacks.CallBackOnMouseMove
+//		(
+//			xpos, ypos,
+//			SCREEN->Mouse.Velocity.x, SCREEN->Mouse.Velocity.y,
+//			SCREEN->Mouse.Button.Left, SCREEN->Mouse.Button.Right, SCREEN->Mouse.Button.Center
+//		);
+//	}
+//}
+//void Window::Window_Move_Callback(GLFWwindow *window, int x, int y)
+//{
+//#if _CALLBACK_DEBUG
+//	f_TRACE("WINDOW Move CALLBACK X:" << x << " Y: " << y); // This is a Window Move Callback. I got Wires crossed somewhere. Look into this when it matters... 
+//#endif
+//	SCREEN->Position.x = x; // Double check to ensure this is the height and width and not position THIS SHOULD BE THE WINDOW MOVE CALLBACK WTF
+//	SCREEN->Position.y = y;
+//}
+//
+///*____________________________________________________________________________________________________________________________________________________________________*/
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/*========================================================= Set Sync Rate(FPS) of Window =============================================================================*/
+/*========================================================== Get Sync Rate(FPS) of Window =============================================================================*/
+
+//void Window::SetSyncRate(unsigned short rate)
+//{
+//	Framerate.Set(rate);//SyncRATE = 1000 / rate;
+//}
+// unsigned short Window::GetSyncRate()
+// {
+// 	return Framerate.Get();
+// }
+/*
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           CALLBACK CLASS                                                                                                                            
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class CallBack
+{
+public:
+	CallBack()
+	{
+
+		CallBackOnInputFocus = NULL;
+		CallBackOnInputBlur = NULL;
+
+		CallBackOnKeyDown = NULL;
+		CallBackOnKeyUp = NULL;
+		CallBackOnKeyHold = NULL;
+
+		CallBackOnMouseFocus = NULL;
+		CallBackOnMouseBlur = NULL;
+		CallBackOnMouseMove = NULL;
+		CallBackOnMouseWheel = NULL;
+
+		CallBackOnLButtonDown = NULL;
+		CallBackOnLButtonUp = NULL;
+		CallBackOnRButtonDown = NULL;
+		CallBackOnRButtonUp = NULL;
+		CallBackOnMButtonDown = NULL;
+		CallBackOnMButtonUp = NULL;
+
+		CallBackOnMinimize = NULL;
+		CallBackOnRestore = NULL;
+		CallBackOnResize = NULL;
+		CallBackOnExpose = NULL;
+		CallBackOnExit = NULL;
+		CallBackOnUser = NULL;
+
+	};
+
+	~CallBack() {};
+
+	void(*CallBackOnInputFocus)           ();
+	void(*CallBackOnInputBlur)            ();
+
+	void(*CallBackOnKeyDown)              (GLushort Keycode, GLushort ScanCode, GLushort Modifier, GLubyte rep);                                                    //(SDL_Keysym sym, int mod, Uint16 unicode);
+	void(*CallBackOnKeyUp)                (GLushort Keycode, GLushort ScanCode, GLushort Modifier);
+	void(*CallBackOnKeyHold)              (GLushort Keycode, GLushort ScanCode, GLushort Modifier);
+
+	void(*CallBackOnMouseFocus)           ();
+	void(*CallBackOnMouseBlur)            ();
+	void(*CallBackOnMouseMove)            (int mX, int mY, int relX, int relY, bool Left, bool Right, bool Middle);
+	void(*CallBackOnMouseWheel)           (bool Up, bool Down);
+
+	void(*CallBackOnLButtonDown)         (int mX, int mY);
+	void(*CallBackOnLButtonUp)          (int mX, int mY);
+	void(*CallBackOnRButtonDown)          (int mX, int mY);
+	void(*CallBackOnRButtonUp)           (int mX, int mY);
+	void(*CallBackOnMButtonDown)          (int mX, int mY);
+	void(*CallBackOnMButtonUp)         (int mX, int mY);
+
+	void(*CallBackOnMinimize)             ();
+	void(*CallBackOnRestore)              ();
+	void(*CallBackOnResize)               (int w, int h);
+	void(*CallBackOnExpose)               ();
+	void(*CallBackOnExit)                 ();
+	void(*CallBackOnUser)                 (GLubyte type, int code, void* data1, void* data2);
+
+	void SetOnInputFocus();
+	void SetOnInputBlur();
+
+	void SetOnKeyDown(void(*f)   (GLushort Keycode, GLushort ScanCode, GLushort Modifier, GLubyte rep)) { CallBackOnKeyDown = f; }
+	void SetOnKeyUp(void(*f)   (GLushort Keycode, GLushort ScanCode, GLushort Modifier)) { CallBackOnKeyUp = f; }
+	void SetOnKeyHold(void(*f)   (GLushort Keycode, GLushort ScanCode, GLushort Modifier)) { CallBackOnKeyHold = f; }
+
+	void SetOnMouseFocus();
+	void SetOnMouseBlur();
+	void SetOnMouseMove(void(*f) (int mX, int mY, int relX, int relY, bool Left, bool Right, bool Middle)) { CallBackOnMouseMove = f; }
+	void SetOnMouseWheel(bool Up, bool Down);
+
+	void SetOnLButtonDown(void(*f)        (int, int)) { CallBackOnLButtonDown = f; }
+	void SetOnLButtonUp(void(*f)          (int, int)) { CallBackOnLButtonUp = f; }
+	void SetOnRButtonDown(void(*f)        (int, int)) { CallBackOnRButtonDown = f; }
+	void SetOnRButtonUp(void(*f)          (int, int)) { CallBackOnRButtonUp = f; }
+	void SetOnMButtonDown(void(*f)        (int, int)) { CallBackOnMButtonDown = f; }
+	void SetOnMButtonUp(void(*f)          (int, int)) { CallBackOnMButtonUp = f; }
+
+	void SetOnMinimize();
+	void SetOnRestore();
+	void SetOnResize(int w, int h);
+	void SetOnExpose();
+	void SetOnExit();
+	void SetOnUser(GLubyte type, int code, void* data1, void* data2);
+}; */
+
+
+
+
+
+struct HintsStruct
+{
+
+	struct WindowHints
+	{
+		bool RESIZABLE = GL_TRUE;//	GL_TRUE or GL_FALSE
+		bool VISIBLE = GL_TRUE;//	GL_TRUE or GL_FALSE
+		bool DECORATED = GL_TRUE;//	GL_TRUE or GL_FALSE
+	}Window;
+
+	struct FrameBufferHints
+	{
+
+		unsigned int RED_BITS = 8;//	0 to INT_MAX
+		unsigned int GREEN_BITS = 8;//	0 to INT_MAX
+		unsigned int BLUE_BITS = 8;//	0 to INT_MAX
+		unsigned int ALPHA_BITS = 8;//	0 to INT_MAX
+		unsigned int DEPTH_BITS = 24;//	0 to INT_MAX
+		unsigned int STENCIL_BITS = 8;//	0 to INT_MAX
+		unsigned int ACCUM_RED_BITS = 0;//	0 to INT_MAX
+		unsigned int ACCUM_GREEN_BITS = 0;//	0 to INT_MAX
+		unsigned int ACCUM_BLUE_BITS = 0;//	0 to INT_MAX
+		unsigned int ACCUM_ALPHA_BITS = 0;//	0 to INT_MAX
+		unsigned int AUX_BUFFERS = 0;//	0 to INT_MAX
+		unsigned int SAMPLES = 0;//	0 to INT_MAX
+		unsigned int REFRESH_RATE = 0;//	0 to INT_MAX
+
+	}FrameBuffer;
+	struct ContextHints
+	{
+		unsigned int CLIENT_API = GLFW_OPENGL_API;//	GLFW_OPENGL_API or GLFW_OPENGL_ES_API
+		unsigned int CONTEXT_VERSION_MAJOR = 1;//	Any valid major version number of the chosen client API
+		unsigned int CONTEXT_VERSION_MINOR = 0;//	Any valid minor version number of the chosen client API
+		unsigned int CONTEXT_ROBUSTNESS = GLFW_NO_ROBUSTNESS;//	GLFW_NO_ROBUSTNESS, GLFW_NO_RESET_NOTIFICATION or GLFW_LOSE_CONTEXT_ON_RESET
+		unsigned int OPENGL_PROFILE = GLFW_OPENGL_ANY_PROFILE;//	GLFW_OPENGL_ANY_PROFILE, GLFW_OPENGL_COMPAT_PROFILE or GLFW_OPENGL_CORE_PROFILE
+	}Context;
+}Hints;
+
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/22/18
+// WORKING ON CLEAN UP, ALTERATIONS TO THE MESSAGING SYSTEM TO PASS MESSAGE AS REFERENCE AND RETURN BOOL TRUE IF MESSAGE EXIST FALSE IF NOT. This places it more inline with Windows messaging syste,
+//====================================================================================================================================================================================================================================================================
+Simplified the Event Structure to remove redundent data from the Union significantly removing a large amount of code.
+//			unsigned int Handle;         //	HWND   hwnd;
+//			unsigned int Message;        //	UINT   message;
+//			unsigned long Time;          //	DWORD  time;
+//			Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//			unsigned int Handle;         //	HWND   hwnd;
+//			unsigned int Message;        //	UINT   message;
+//			unsigned long Time;          //	DWORD  time;
+//			Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//		unsigned int Handle;         //	HWND   hwnd;
+//		unsigned int Message;        //	UINT   message;
+//		unsigned long Time;          //	DWORD  time;
+//		Vec2 Location;               //	POINT  pt;
+//			unsigned int Handle;         //	HWND   hwnd;
+//			unsigned int Message;        //	UINT   message;
+//			unsigned long Time;          //	DWORD  time;
+//			Vec2 Location;               //	POINT  pt;
+//			unsigned int Handle;         //	HWND   hwnd;
+//			unsigned int Message;        //	UINT   message;
+//			unsigned long Time;          //	DWORD  time;
+//			Vec2 Location;               //	POINT  pt; // maybe Just feed the xoffset and yOffset into here
+
+
+
+	//void Window::SetActiveWindow(Window *win) { SCREEN = win; }
+//	bool EventLoop();
+
+
+I DONT THINK I EVER EVEN USED THIS ANYWHERE.... SHOULD I?
+EventStructure::EventStructure(int window, unsigned int msg, unsigned int *wP, unsigned long *lP)
+	:
+	Handle(Window::GetInstance()->GetHandle()), Message(msg), wParam(wP), lParam(lP)
+{}
+......
+
+
+	// Check to make sure Thread is not already mapped... Not needed because this entire function is not needed
+	//  for_loop(I, ThreadCount)
+	//  {
+	//  	if (ThreadMap[I] == ID)
+	//  	{
+	//  		return; 
+	//  	}
+	//  }
+//	ThreadMap[std::this_thread::get_id()] = ThreadCount++;
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/20/18
+// JUST REMOVING GARBAGE FROM PLAYING AROUND WITH ATTEMPTING TO MAKE AN INTERFACE THAT ALLOWED ME TO MAP AND SUBSEQUENTLY GET ALL WINDOW PROPERTIE AND ATTRIBUTES IN A UNIVERSAL GETTER OPERATION
+//====================================================================================================================================================================================================================================================================
+// NOTES: FUCK YOU FLU!
+
+
+
+void cursor_enter_callback(GLFWwindow* window, int entered) {}
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {}
+void joystick_callback(int joy, int event) {}
+void drop_callback(GLFWwindow* window, int count, const char** paths) {}
+void error_callback(int error, const char* description) {}
+
+// glfwSetKeyCallback(window, key_callback);
+// glfwSetCharCallback(window, character_callback);
+// glfwSetCharModsCallback(window, charmods_callback);
+// glfwSetCursorPosCallback(window, cursor_pos_callback);
+// glfwSetCursorEnterCallback(window, cursor_enter_callback);
+// glfwSetScrollCallback(window, scroll_callback);
+// glfwSetJoystickCallback(joystick_callback);
+// glfwSetDropCallback(window, drop_callback);
+//  
+// 
+//  static void Error_callback(int, const char*);
+//  static void Resize_Callback(GLFWwindow *window, int, int);
+//  static void Window_close_callback(GLFWwindow *window);
+//  static void KeyBoard_Callback(GLFWwindow *window, int, int, int, int);
+//  
+//  static void DropFile_callback(GLFWwindow *window, int, const char**);
+//  static void Window_Move_Callback(GLFWwindow *window, int, int);
+//  static const char *GetClipBoard();
+//  static void  SetClipBoard(char*);
+//  
+//  void InputManager::Scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+//  {
+//  
+//  	Event msg;
+//  
+//  	msg.data.WindowScrollStruct.Handle = (int)GetWindowHandle(window);//GetWindowHandle(window);     Temp cast these to an Int
+//  	msg.data.WindowScrollStruct.Message = EVENT_KEYBOARD;    //	UINT   message;
+//  		msg.data.WindowScrollStruct.Time = GetTime();        //	DWORD  time;
+//  	msg.data.WindowScrollStruct.Location = Window::Instance->Mouse.Position;
+//  
+//  	msg.data.WindowScrollStruct.XOffset = xoffset;       //	WPARAM wParam;
+//  	msg.data.WindowScrollStruct.YOffset = yoffset;       //	WPARAM wParam;
+//  	msg.data.WindowScrollStruct.Unused; //??? // lPrivate;		
+//  }
+//  
+//  
+//  void Mouse_Button_Callback(GLFWwindow* window, int button, int action, int mods)
+//  {
+//  	Event msg;
+//  	msg.data.MouseClickStruct.Handle = (int)GetWindowHandle(window);
+//  	msg.data.MouseClickStruct.Message = EVENT_MOUSECLICK;
+//  	msg.data.MouseClickStruct.Time = GetTime();
+//  	msg.data.MouseClickStruct.Location = Window::Instance->Mouse.Position;
+//  
+//   
+//  	msg.data.MouseClickStruct.Action = action;
+//  
+//  	msg.data.MouseClickStruct.Modification = mods;
+//  
+
+//  	//msg.data.MouseClickStruct.Padding = NULL;
+//  }
+//  void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+//  {
+//  	Event msg(EVENT_KEYBOARD);
+//  
+//  	msg.data.KeyBoardStruct.KeyCode = key;       //	WPARAM wParam;
+//  	msg.data.KeyBoardStruct.ScanCode = scancode;     //	LPARAM lParam;
+//  	msg.data.KeyBoardStruct.Action = action; //??? // lPrivate;
+//  	msg.data.KeyBoardStruct.Mods = mods;
+//  }
+//  
+//  
+
+
+
+//====================================================================================================================================================================================================================================================================
+//                                                        1/18/18
+// JUST REMOVING GARBAGE FROM PLAYING AROUND WITH ATTEMPTING TO MAKE AN INTERFACE THAT ALLOWED ME TO MAP AND SUBSEQUENTLY GET ALL WINDOW PROPERTIE AND ATTRIBUTES IN A UNIVERSAL GETTER OPERATION
+//====================================================================================================================================================================================================================================================================
+
+KeyEnumeration Definitions:
+
+
+
+
+
+
+
+
+
+
+//#include<map>
+//std::map<int, int> Keymap = {
+//{ MYSTIC_KEY_UNKNOWN        ,   GLFW_KEY_UNKNOWN         },
+//{ MYSTIC_KEY_SPACE			,   GLFW_KEY_SPACE            },
+//{ MYSTIC_KEY_APOSTROPHE		,   GLFW_KEY_APOSTROPHE       },
+//{ MYSTIC_KEY_COMMA			,   GLFW_KEY_COMMA            },
+//{ MYSTIC_KEY_MINUS			,   GLFW_KEY_MINUS            },
+//{ MYSTIC_KEY_PERIOD			,   GLFW_KEY_PERIOD           },
+//{ MYSTIC_KEY_SLASH			,   GLFW_KEY_SLASH            },
+//{ MYSTIC_KEY_0				,   GLFW_KEY_0                },
+//{ MYSTIC_KEY_1				,   GLFW_KEY_1                },
+//{ MYSTIC_KEY_2				,   GLFW_KEY_2                },
+//{ MYSTIC_KEY_3				,   GLFW_KEY_3                },
+//{ MYSTIC_KEY_4				,   GLFW_KEY_4                },
+//{ MYSTIC_KEY_5				,   GLFW_KEY_5                },
+//{ MYSTIC_KEY_6				,   GLFW_KEY_6                },
+//{ MYSTIC_KEY_7				,   GLFW_KEY_7                },
+//{ MYSTIC_KEY_8				,   GLFW_KEY_8                },
+//{ MYSTIC_KEY_9				,   GLFW_KEY_9                },
+//{ MYSTIC_KEY_SEMICOLON		,   GLFW_KEY_SEMICOLON        },
+//{ MYSTIC_KEY_EQUAL			,   GLFW_KEY_EQUAL            },
+//{ MYSTIC_KEY_A				,   GLFW_KEY_A                },
+//{ MYSTIC_KEY_B				,   GLFW_KEY_B                },
+//{ MYSTIC_KEY_C				,   GLFW_KEY_C                },
+//{ MYSTIC_KEY_D				,   GLFW_KEY_D                },
+//{ MYSTIC_KEY_E				,   GLFW_KEY_E                },
+//{ MYSTIC_KEY_F				,   GLFW_KEY_F                },
+//{ MYSTIC_KEY_G				,   GLFW_KEY_G                },
+//{ MYSTIC_KEY_H				,   GLFW_KEY_H                },
+//{ MYSTIC_KEY_I				,   GLFW_KEY_I                },
+//{ MYSTIC_KEY_J				,   GLFW_KEY_J                },
+//{ MYSTIC_KEY_K				,   GLFW_KEY_K                },
+//{ MYSTIC_KEY_L				,   GLFW_KEY_L                },
+//{ MYSTIC_KEY_M				,   GLFW_KEY_M                },
+//{ MYSTIC_KEY_N				,   GLFW_KEY_N                },
+//{ MYSTIC_KEY_O				,   GLFW_KEY_O                },
+//{ MYSTIC_KEY_P				,   GLFW_KEY_P                },
+//{ MYSTIC_KEY_Q				,   GLFW_KEY_Q                },
+//{ MYSTIC_KEY_R				,   GLFW_KEY_R                },
+//{ MYSTIC_KEY_S				,   GLFW_KEY_S                },
+//{ MYSTIC_KEY_T				,   GLFW_KEY_T                },
+//{ MYSTIC_KEY_U				,   GLFW_KEY_U                },
+//{ MYSTIC_KEY_V				,   GLFW_KEY_V                },
+//{ MYSTIC_KEY_W				,   GLFW_KEY_W                },
+//{ MYSTIC_KEY_X				,   GLFW_KEY_X                },
+//{ MYSTIC_KEY_Y				,   GLFW_KEY_Y                },
+//{ MYSTIC_KEY_Z				,   GLFW_KEY_Z                },
+//{ MYSTIC_KEY_LEFT_BRACKET	,	   GLFW_KEY_LEFT_BRACKET  },
+//{ MYSTIC_KEY_BACKSLASH		,   GLFW_KEY_BACKSLASH        },
+//{ MYSTIC_KEY_RIGHT_BRACKET	,   GLFW_KEY_RIGHT_BRACKET    },
+//{ MYSTIC_KEY_GRAVE_ACCENT	,	   GLFW_KEY_GRAVE_ACCENT  },
+//{ MYSTIC_KEY_WORLD_1		,	   GLFW_KEY_WORLD_1       },
+//{ MYSTIC_KEY_WORLD_2		,	   GLFW_KEY_WORLD_2       },
+//{ MYSTIC_KEY_ESCAPE			,   GLFW_KEY_ESCAPE         	  },
+//{ MYSTIC_KEY_ENTER			,   GLFW_KEY_ENTER          	  },
+//{ MYSTIC_KEY_TAB			,	   GLFW_KEY_TAB           },
+//{ MYSTIC_KEY_BACKSPACE		,   GLFW_KEY_BACKSPACE      	  },
+//{ MYSTIC_KEY_INSERT			,   GLFW_KEY_INSERT         	  },
+//{ MYSTIC_KEY_DELETE			,   GLFW_KEY_DELETE         	  },
+//{ MYSTIC_KEY_RIGHT			,   GLFW_KEY_RIGHT          	  },
+//{ MYSTIC_KEY_LEFT			,	   GLFW_KEY_LEFT          },
+//{ MYSTIC_KEY_DOWN			,	   GLFW_KEY_DOWN          },
+//{ MYSTIC_KEY_UP				,   GLFW_KEY_UP             	  },
+//{ MYSTIC_KEY_PAGE_UP		,	   GLFW_KEY_PAGE_UP       },
+//{ MYSTIC_KEY_PAGE_DOWN		,   GLFW_KEY_PAGE_DOWN      	  },
+//{ MYSTIC_KEY_HOME			,	   GLFW_KEY_HOME          },
+//{ MYSTIC_KEY_END			,	   GLFW_KEY_END           },
+//{ MYSTIC_KEY_CAPS_LOCK		,   GLFW_KEY_CAPS_LOCK      	  },
+//{ MYSTIC_KEY_SCROLL_LOCK	,	   GLFW_KEY_SCROLL_LOCK   },
+//{ MYSTIC_KEY_NUM_LOCK		,	   GLFW_KEY_NUM_LOCK      },
+//{ MYSTIC_KEY_PRINT_SCREEN	,	   GLFW_KEY_PRINT_SCREEN  },
+//{ MYSTIC_KEY_PAUSE			,   GLFW_KEY_PAUSE          	  },
+//{ MYSTIC_KEY_F1				,   GLFW_KEY_F1             	  },
+//{ MYSTIC_KEY_F2				,   GLFW_KEY_F2             	  },
+//{ MYSTIC_KEY_F3				,   GLFW_KEY_F3             	  },
+//{ MYSTIC_KEY_F4				,   GLFW_KEY_F4             	  },
+//{ MYSTIC_KEY_F5				,   GLFW_KEY_F5             	  },
+//{ MYSTIC_KEY_F6				,   GLFW_KEY_F6             	  },
+//{ MYSTIC_KEY_F7				,   GLFW_KEY_F7             	  },
+//{ MYSTIC_KEY_F8				,   GLFW_KEY_F8             	  },
+//{ MYSTIC_KEY_F9				,   GLFW_KEY_F9             	  },
+//{ MYSTIC_KEY_F10			,	   GLFW_KEY_F10           },
+//{ MYSTIC_KEY_F11			,	   GLFW_KEY_F11           },
+//{ MYSTIC_KEY_F12			,	   GLFW_KEY_F12           },
+//{ MYSTIC_KEY_F13			,	   GLFW_KEY_F13           },
+//{ MYSTIC_KEY_F14			,	   GLFW_KEY_F14           },
+//{ MYSTIC_KEY_F15			,	   GLFW_KEY_F15           },
+//{ MYSTIC_KEY_F16			,	   GLFW_KEY_F16           },
+//{ MYSTIC_KEY_F17			,	   GLFW_KEY_F17           },
+//{ MYSTIC_KEY_F18			,	   GLFW_KEY_F18           },
+//{ MYSTIC_KEY_F19			,	   GLFW_KEY_F19           },
+//{ MYSTIC_KEY_F20			,	   GLFW_KEY_F20           },
+//{ MYSTIC_KEY_F21			,	   GLFW_KEY_F21           },
+//{ MYSTIC_KEY_F22			,	   GLFW_KEY_F22           },
+//{ MYSTIC_KEY_F23			,	   GLFW_KEY_F23           },
+//{ MYSTIC_KEY_F24			,	   GLFW_KEY_F24           },
+//{ MYSTIC_KEY_F25			,	   GLFW_KEY_F25           },
+//{ MYSTIC_KEY_KP_0			,	   GLFW_KEY_KP_0          },
+//{ MYSTIC_KEY_KP_1			,	   GLFW_KEY_KP_1          },
+//{ MYSTIC_KEY_KP_2			,	   GLFW_KEY_KP_2          },
+//{ MYSTIC_KEY_KP_3			,	   GLFW_KEY_KP_3          },
+//{ MYSTIC_KEY_KP_4			,	   GLFW_KEY_KP_4          },
+//{ MYSTIC_KEY_KP_5			,	   GLFW_KEY_KP_5          },
+//{ MYSTIC_KEY_KP_6			,	   GLFW_KEY_KP_6          },
+//{ MYSTIC_KEY_KP_7			,	   GLFW_KEY_KP_7          },
+//{ MYSTIC_KEY_KP_8			,	   GLFW_KEY_KP_8          },
+//{ MYSTIC_KEY_KP_9			,	   GLFW_KEY_KP_9          },
+//{ MYSTIC_KEY_KP_DECIMAL		,   GLFW_KEY_KP_DECIMAL     	  },
+//{ MYSTIC_KEY_KP_DIVIDE		,   GLFW_KEY_KP_DIVIDE      	  },
+//{ MYSTIC_KEY_KP_MULTIPLY	,	   GLFW_KEY_KP_MULTIPLY   },
+//{ MYSTIC_KEY_KP_SUBTRACT	,	   GLFW_KEY_KP_SUBTRACT   },
+//{ MYSTIC_KEY_KP_ADD			,   GLFW_KEY_KP_ADD         	  },
+//{ MYSTIC_KEY_KP_ENTER		,	   GLFW_KEY_KP_ENTER      },
+//{ MYSTIC_KEY_KP_EQUAL		,	   GLFW_KEY_KP_EQUAL      },
+//{ MYSTIC_KEY_LEFT_SHIFT		,   GLFW_KEY_LEFT_SHIFT     	  },
+//{ MYSTIC_KEY_LEFT_CONTROL	,	   GLFW_KEY_LEFT_CONTROL  },
+//{ MYSTIC_KEY_LEFT_ALT		,	   GLFW_KEY_LEFT_ALT      },
+//{ MYSTIC_KEY_LEFT_SUPER		,   GLFW_KEY_LEFT_SUPER     	  },
+//{ MYSTIC_KEY_RIGHT_SHIFT	,	   GLFW_KEY_RIGHT_SHIFT   },
+//{ MYSTIC_KEY_RIGHT_CONTROL	,   GLFW_KEY_RIGHT_CONTROL  	  },
+//{ MYSTIC_KEY_RIGHT_ALT		,   GLFW_KEY_RIGHT_ALT      	  },
+//{ MYSTIC_KEY_RIGHT_SUPER	,	   GLFW_KEY_RIGHT_SUPER   },
+//{ MYSTIC_KEY_MENU			,	   GLFW_KEY_MENU          },
+//{ MYSTIC_KEY_LAST			,	   GLFW_KEY_LAST          }
+//};
+
+
+
+
+
+#include<map>
+#include<typeinfo>
+
+template<typename T>
+class TypeInterface
+{
+	TypeInterface(){}
+	size_t size() { return sizeof(T); }
+
+	union
+	{
+		int *ValuePTR;
+		T Value;
+	};
+private:
+
+}; 
+
+ class FancyObject
+{
+public:
+	enum AttribType
+	{
+		AttribColor, AttribWidth, AttribHeight, AttribTitle, AttribPosition, AttribTransform
+	};
+
+//	std:map<enum
+	template<typename T>
+	class Interface
+	{
+	public:
+		Interface()
+		{
+
+		}
+		T* Get() { return &Value; }
+		T*Value;
+		size_t Size;
+		type_info Type;
+	};
+
+ 	std::map<AttribType, std::type_info<T> >  DataMap;
+ 	void Makemap()
+ 	{
+ 		DataMap[AttribColor] = typeof(&Color);
+ 		DataMap[AttribWidth] =     *Width;
+ 		DataMap[AttribHeight] =    *Height;
+ 		DataMap[AttribTitle] =     *Title;
+ 		DataMap[AttribPosition] =  *Position;
+ 		DataMap[AttribTransform] = *Transform;
+ 	}
+	unsigned long long Color;
+	int Width;
+	int Height;
+	char *Title;
+	Vec2 Position;
+	Matrix Transform;
+	// Template just does not feel like the correct way to do. Auto sounds about right.
+	///T Get(AttribType _Property)
+	type_info *GetAttrib(AttribType param)
+	{
+		return DataMap[param];
+	}
+
+
+	constexpr char& operator[](std::size_t i) { return _data[i]; }
+	constexpr const char& operator[](std::size_t i) const { return _data[i]; }
+
+
+}
+
+
+ 
+ template<typename I, int C, int Step> struct Loop_Unroll {
+
+ };
+
+
+// //	I mean, I could switch / case this but I think Map would be better...
+// switch (_Property) {
+// case AttribColor:
+// 	return Color;
+// case AttribWidth:
+// 	return *Width;
+// case AttribHeight:
+// 	return Height;
+// case AttribTitle:
+// 	return Title;
+// case AttribPosition:
+// 	return Position;
+// case AttribTransform:
+// 	return Transform;
